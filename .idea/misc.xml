@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/arrow_back.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/bomb.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/buttom.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/cell.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/easy_master.xml" value="0.1465" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/hard.xml" value="0.1465" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_baseline_arrow_back_30.xml" value="0.11" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_baseline_looks_one_24.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_baseline_outlined_flag_24.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_bomb_background.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_drawing.xml" value="0.3" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_flag_fill0_wght700_grad_25_opsz20.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_selected_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_unselected_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/ic_vector_cell.xml" value="0.13" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/icon_background.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/icon_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/master.xml" value="0.1465" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/medium.xml" value="0.1465" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/new_bomb.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/new_cell.xml" value="0.11" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/new_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/red_cell.xml" value="0.1445" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/refresh.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/selected_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/selector_for_buttom.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/selector_for_button.xml" value="0.164" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/shape_button.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/shape_button_pressed.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/small_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/drawable/unselected_flag.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/font/syncopate_bold.xml" value="0.12578125" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_beginner_mode.xml" value="0.22333333333333336" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_game_beginner.xml" value="0.14365113296280463" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_game_board.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_new_game_settings.xml" value="0.25" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_settings.xml" value="0.1" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/layout/activity_statistics.xml" value="0.14365113296280463" />
+        <entry key="..\:/Users/chevy/AndroidStudioProjects/MinesWeeper/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
