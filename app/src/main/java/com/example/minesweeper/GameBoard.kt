@@ -13,14 +13,14 @@ import com.otaliastudios.zoom.Alignment
 import com.otaliastudios.zoom.ZoomLayout
 import kotlin.random.Random
 
-
 class GameBoard : AppCompatActivity() {
-    var fieldSize = 9
-    var bombs = 10
-    var numbOfOpened = 0
-    var isFirstClick = true
+    private var fieldSize = 9
+    private var bombs = 10
+    private var numbOfOpened = 0
+    private var isFirstClick = true
 
-//    private lateinit var chronometer: Chronometer
+    private lateinit var chronometer: Chronometer
+    var isStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +46,16 @@ class GameBoard : AppCompatActivity() {
         fieldDesign()
     }
 
-    fun chronometerStart() {
-        val chronometer = findViewById<View>(R.id.chronometer) as Chronometer
+    private fun chronometerStart() {
+        chronometer = findViewById<View>(R.id.chronometer) as Chronometer
         SystemClock.elapsedRealtime()
         chronometer.setOnChronometerTickListener {
             (SystemClock.elapsedRealtime() - chronometer.base)
         }
         chronometer.base = SystemClock.elapsedRealtime()
-        chronometer.start()
     }
 
-    fun newGame() {
+    private fun newGame() {
         val restartBtn = findViewById<View>(R.id.restart)
         restartBtn.setOnClickListener {
             recreate()
@@ -69,10 +68,10 @@ class GameBoard : AppCompatActivity() {
         startActivity(intent)
     }
 
-    var fieldArray = Array(fieldSize) {
+    private var fieldArray = Array(fieldSize) {
         arrayOfNulls<ImageView>(fieldSize)
     }
-    var arrayOfCells = Array(fieldSize) {
+    private var arrayOfCells = Array(fieldSize) {
         arrayOfNulls<FieldCell>(fieldSize)
     }
 
@@ -93,7 +92,7 @@ class GameBoard : AppCompatActivity() {
         cell[12] = this.resources.getDrawable(R.drawable.eight)
     }
 
-    fun numbOfBombs(i: Int, k: Int) {
+    private fun numbOfBombs(i: Int, k: Int) {
         var count = 0
         val isIZero = (i != 0)
         val isKZero = (k != 0)
@@ -127,7 +126,7 @@ class GameBoard : AppCompatActivity() {
         arrayOfCells[i][k]!!.value = count
     }
 
-    fun openFieldByClick(i: Int, k: Int) {
+    private fun openFieldByClick(i: Int, k: Int) {
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
         val isINotEight = (i != (fieldSize - 1))
@@ -166,15 +165,15 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    fun click(i: Int, k: Int) {
+    private fun click(i: Int, k: Int) {
         if (arrayOfCells[i][k]!!.isBomb == 0 && !arrayOfCells[i][k]!!.isChecked) {
             arrayOfCells[i][k]!!.isChecked = true
             numbOfOpened++
         }
         if (numbOfOpened == ((fieldSize) * (fieldSize) - bombs)) {
-            for (i in 0 until fieldSize) {
-                for (k in 0 until fieldSize) {
-                    arrayOfCells[i][k]!!.isClickable = false
+            for (a in 0 until fieldSize) {
+                for (b in 0 until fieldSize) {
+                    arrayOfCells[a][b]!!.isClickable = false
                 }
             }
             Toast.makeText(this, "U win", Toast.LENGTH_SHORT).show()
@@ -197,10 +196,8 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
+    private fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
         fieldArray[i][k]!!.setOnClickListener {
-//            chronometerStart()
-//            chronometer.start()
             if (switcher.isChecked) {
                 if (!arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable && !arrayOfCells[i][k]!!.isOpened) {
                     val finalDrawable = LayerDrawable(arrayOf(cell[4], cell[2]))
@@ -212,14 +209,15 @@ class GameBoard : AppCompatActivity() {
                 }
             } else if (!switcher.isChecked) {
 
-
-                if (isFirstClick == true) {
+                if (isFirstClick) {
                     chronometerStart()
+                    isStarted = true
+                    chronometer.start()
                     arrayOfCells[i][k]!!.isClickable = false
                     if (arrayOfCells[i][k]!!.isBomb == 1) {
                         arrayOfCells[i][k]!!.isBomb = 0
                         var isRelocated = false
-                        while (isRelocated != true) {
+                        while (!isRelocated) {
                             val a = Random.nextInt(0, fieldSize)
                             val b = Random.nextInt(0, fieldSize)
                             if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i || b != k)) {
@@ -228,9 +226,9 @@ class GameBoard : AppCompatActivity() {
                             }
                         }
                     }
-                    for (i in 0 until fieldSize) {
-                        for (k in 0 until fieldSize) {
-                            numbOfBombs(i, k)
+                    for (a in 0 until fieldSize) {
+                        for (b in 0 until fieldSize) {
+                            numbOfBombs(a, b)
                         }
                     }
                     val bombs = arrayOfCells[i][k]!!.value
@@ -246,10 +244,6 @@ class GameBoard : AppCompatActivity() {
                     isFirstClick = false
                 }
 
-
-
-
-
                 if (arrayOfCells[i][k]!!.isBomb == 0 && arrayOfCells[i][k]!!.isClickable) {
                     val bombs = arrayOfCells[i][k]!!.value
                     if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
@@ -257,9 +251,9 @@ class GameBoard : AppCompatActivity() {
                         numbOfOpened++
                     }
                     if (numbOfOpened == ((fieldSize) * (fieldSize) - bombs)) {
-                        for (i in 0 until fieldSize) {
-                            for (k in 0 until fieldSize) {
-                                arrayOfCells[i][k]!!.isClickable = false
+                        for (a in 0 until fieldSize) {
+                            for (b in 0 until fieldSize) {
+                                arrayOfCells[a][b]!!.isClickable = false
                             }
                         }
                         Toast.makeText(this, "U win", Toast.LENGTH_SHORT).show()
@@ -278,51 +272,27 @@ class GameBoard : AppCompatActivity() {
                     openFieldByClick(i, k)
                 }
                 if (arrayOfCells[i][k]!!.isBomb == 1 && arrayOfCells[i][k]!!.isClickable) {
-                    for (i in 0 until fieldSize) {
-                        for (k in 0 until fieldSize) {
-                            arrayOfCells[i][k]!!.isClickable = false
-                            if (arrayOfCells[i][k]!!.isBomb == 1) {
+                    chronometer.stop()
+                    for (a in 0 until fieldSize) {
+                        for (b in 0 until fieldSize) {
+                            arrayOfCells[a][b]!!.isClickable = false
+                            if (arrayOfCells[a][b]!!.isBomb == 1) {
                                 val redBomb = LayerDrawable(arrayOf(cell[3], cell[1]))
-                                fieldArray[i][k]!!.background = redBomb
+                                fieldArray[a][b]!!.background = redBomb
                             }
                         }
                     }
                 }
             }
-
         }
     }
 
-    fun firstClick(
-        i: Int,
-        k: Int,
-    ) {
-        fieldArray[i][k]!!.setOnClickListener {
-            if (arrayOfCells[i][k]!!.isBomb == 1) {
-                arrayOfCells[i][k]!!.isBomb = 0
-                var bb = 0
-                while (bb == 1) {
-                    val i = Random.nextInt(0, fieldSize)
-                    val k = Random.nextInt(0, fieldSize)
-                    if (arrayOfCells[i][k]!!.isBomb == 0) {
-                        arrayOfCells[i][k]!!.isBomb = 1
-                        bb = 1
-                    }
-                }
-            } else {
-                fieldArray[i][k]!!.background = cell[0]
-            }
-        }
-        numbOfBombs(i, k)
-    }
-
-    fun forFun(
+    private fun forFun(
         field: LinearLayout,
         switcher: ToggleButton,
         size: LinearLayout.LayoutParams,
         row: LinearLayout.LayoutParams
     ) {
-//        var count = 0
         for (i in 0 until fieldSize) {
             val linRow = LinearLayout(this)
             for (k in 0 until fieldSize) {
@@ -330,19 +300,14 @@ class GameBoard : AppCompatActivity() {
                 fieldArray[i][k]!!.background = cell[4]
                 arrayOfCells[i][k]!!.isOpened = false
                 numbOfBombs(i, k)
-//                if (count == 0) {
-//                    arrayOfCells[i][k]!!.isEmpty = 0
-//                }
-//                Log.d("states", "$count")
                 if (arrayOfCells[i][k]!!.isEmpty == 1) clickActivity(i, k, switcher)
-//                count++
                 linRow.addView(fieldArray[i][k], size)
             }
             field.addView(linRow, row)
         }
     }
 
-    fun fieldDesign() {
+    private fun fieldDesign() {
         newGame()
         val cellSize = 8000 / fieldSize
         val row: LinearLayout.LayoutParams =
@@ -355,13 +320,11 @@ class GameBoard : AppCompatActivity() {
                 arrayOfCells[i][k] = FieldCell()
             }
         }
-//        firstClick(field, switcher, size, row)
         for (j in 0..bombs) {
             val i = Random.nextInt(0, fieldSize)
             val k = Random.nextInt(0, fieldSize)
             if (arrayOfCells[i][k]!!.isBomb == 0) arrayOfCells[i][k]!!.isBomb = 1
         }
-
         forFun(field, switcher, size, row)
     }
 
@@ -371,7 +334,21 @@ class GameBoard : AppCompatActivity() {
         Log.d("states", "${searchScreen()}")
     }
 
-    fun searchScreen(): Int {
+    var savedTime: Long = 0
+    override fun onPause() {
+        super.onPause()
+        if (isStarted) chronometer.stop()
+        savedTime = SystemClock.elapsedRealtime()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        chronometer.base = chronometer.base + (SystemClock.elapsedRealtime() - savedTime)
+        chronometer.start()
+
+    }
+
+    private fun searchScreen(): Int {
         return (this.resources.displayMetrics.widthPixels)
     }
 }
