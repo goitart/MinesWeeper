@@ -8,4 +8,5 @@ class FieldCell {
     var isEmpty = 1
     var value = 0
     var isClickable = true
+    var isRelocated = false
 }

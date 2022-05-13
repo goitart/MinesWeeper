@@ -34,6 +34,10 @@ class NewGameSettings : AppCompatActivity() {
         intent.putExtra("numbOfBombs", 400)
         startActivity(intent)
     }
+    fun toCustomBoard(view: View) {
+        val intent = Intent(this, CustomBoard :: class.java)
+        startActivity(intent)
+    }
     fun toMainActivity(view: View) {
         val intent = Intent(this, MainActivity :: class.java)
         finishAndRemoveTask()

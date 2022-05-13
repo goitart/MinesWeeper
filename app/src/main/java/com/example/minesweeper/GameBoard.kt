@@ -20,7 +20,7 @@ class GameBoard : AppCompatActivity() {
     private var isFirstClick = true
 
     private lateinit var chronometer: Chronometer
-    var isStarted = false
+    private var isStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,6 @@ class GameBoard : AppCompatActivity() {
             arrayOfNulls(fieldSize)
         }
 
-        Log.d("states", "$fieldSize")
         attributes()
         fieldDesign()
     }
@@ -90,6 +89,61 @@ class GameBoard : AppCompatActivity() {
         cell[10] = this.resources.getDrawable(R.drawable.six)
         cell[11] = this.resources.getDrawable(R.drawable.seven)
         cell[12] = this.resources.getDrawable(R.drawable.eight)
+    }
+
+    private fun relocateBomb(i: Int, k: Int) {
+        var isRelocated = false
+        arrayOfCells[i][k]!!.isBomb = 0
+        arrayOfCells[i][k]!!.isRelocated = true
+        while (!isRelocated) {
+            val a = Random.nextInt(0, fieldSize)
+            val b = Random.nextInt(0, fieldSize)
+            if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i && b != k) && !arrayOfCells[a][b]!!.isRelocated) {
+                arrayOfCells[a][b]!!.isBomb = 1
+                isRelocated = true
+            }
+        }
+    }
+
+    private fun removeAround(i: Int, k: Int) {
+        val isIZero = (i != 0)
+        val isKZero = (k != 0)
+        val isIEight = (i != (fieldSize - 1))
+        val isKEight = (k != (fieldSize - 1))
+
+        if (isIZero) {
+            if (arrayOfCells[i - 1][k]!!.isBomb == 1) {
+//                arrayOfCells[i - 1][k]!!.isRelocated = true
+                relocateBomb(i - 1, k)
+            }
+            if (isKZero) {
+                if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) {
+//                    arrayOfCells[i - 1][k - 1]!!.isRelocated = true
+                    relocateBomb(i - 1, k - 1)
+                }
+            }
+        }
+        if (isIEight) {
+            if (arrayOfCells[i + 1][k]!!.isBomb == 1) {
+//                arrayOfCells[i + 1][k]!!.isRelocated = true
+                relocateBomb(i + 1, k)
+            }
+            if (isKEight) {
+                if (arrayOfCells[i + 1][k + 1]!!.isBomb == 1) relocateBomb(i + 1, k + 1)
+            }
+        }
+        if (isKZero) {
+            if (arrayOfCells[i][k - 1]!!.isBomb == 1) relocateBomb(i, k - 1)
+            if (isIEight) {
+                if (arrayOfCells[i + 1][k - 1]!!.isBomb == 1) relocateBomb(i + 1, k - 1)
+            }
+        }
+        if (isKEight) {
+            if (arrayOfCells[i][k + 1]!!.isBomb == 1) relocateBomb(i, k + 1)
+            if (isIZero) {
+                if (arrayOfCells[i - 1][k + 1]!!.isBomb == 1) relocateBomb(i - 1, k + 1)
+            }
+        }
     }
 
     private fun numbOfBombs(i: Int, k: Int) {
@@ -216,16 +270,18 @@ class GameBoard : AppCompatActivity() {
                     arrayOfCells[i][k]!!.isClickable = false
                     if (arrayOfCells[i][k]!!.isBomb == 1) {
                         arrayOfCells[i][k]!!.isBomb = 0
-                        var isRelocated = false
-                        while (!isRelocated) {
-                            val a = Random.nextInt(0, fieldSize)
-                            val b = Random.nextInt(0, fieldSize)
-                            if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i || b != k)) {
-                                arrayOfCells[a][b]!!.isBomb = 1
-                                isRelocated = true
-                            }
-                        }
+                        relocateBomb(i, k)
+//                        var isRelocated = false
+//                        while (!isRelocated) {
+//                            val a = Random.nextInt(0, fieldSize)
+//                            val b = Random.nextInt(0, fieldSize)
+//                            if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i || b != k)) {
+//                                arrayOfCells[a][b]!!.isBomb = 1
+//                                isRelocated = true
+//                            }
+//                        }
                     }
+                    if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) removeAround(i, k)
                     for (a in 0 until fieldSize) {
                         for (b in 0 until fieldSize) {
                             numbOfBombs(a, b)
@@ -334,7 +390,7 @@ class GameBoard : AppCompatActivity() {
         Log.d("states", "${searchScreen()}")
     }
 
-    var savedTime: Long = 0
+    private var savedTime: Long = 0
     override fun onPause() {
         super.onPause()
         if (isStarted) chronometer.stop()

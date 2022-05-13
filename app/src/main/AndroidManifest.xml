@@ -8,7 +8,9 @@
         android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MinesWeeper">
-
+        <activity
+            android:name=".CustomBoard"
+            android:exported="false" />
         <activity
             android:name=".GameBoard"
             android:exported="false">
@@ -18,16 +20,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Statistics"
             android:exported="false">
             <intent-filter>
                 <action android:name=".statistic" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".NewGameSettings"
             android:exported="false">
@@ -37,16 +38,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Settings"
             android:exported="false">
             <intent-filter>
                 <action android:name=".Settings" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
