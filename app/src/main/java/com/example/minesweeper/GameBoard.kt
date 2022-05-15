@@ -15,6 +15,8 @@ import kotlin.random.Random
 
 class GameBoard : AppCompatActivity() {
     private var fieldSize = 9
+    private var fieldSizeI = 9
+    private var fieldSizeK = 9
     private var bombs = 10
     private var numbOfOpened = 0
     private var isFirstClick = true
@@ -32,13 +34,15 @@ class GameBoard : AppCompatActivity() {
         zoom.setMaxZoom(10.0F)
 
         fieldSize = intent.getIntExtra("fieldSize", 9)
+        fieldSizeI = intent.getIntExtra("fieldSizeI", 9)
+        fieldSizeK = intent.getIntExtra("fieldSizeK", 9)
         bombs = intent.getIntExtra("numbOfBombs", 10)
 
-        fieldArray = Array(fieldSize) {
-            arrayOfNulls(fieldSize)
+        fieldArray = Array(fieldSizeI) {
+            arrayOfNulls(fieldSizeK)
         }
-        arrayOfCells = Array(fieldSize) {
-            arrayOfNulls(fieldSize)
+        arrayOfCells = Array(fieldSizeI) {
+            arrayOfNulls(fieldSizeK)
         }
 
         attributes()
@@ -67,11 +71,11 @@ class GameBoard : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private var fieldArray = Array(fieldSize) {
-        arrayOfNulls<ImageView>(fieldSize)
+    private var fieldArray = Array(fieldSizeI) {
+        arrayOfNulls<ImageView>(fieldSizeK)
     }
-    private var arrayOfCells = Array(fieldSize) {
-        arrayOfNulls<FieldCell>(fieldSize)
+    private var arrayOfCells = Array(fieldSizeI) {
+        arrayOfNulls<FieldCell>(fieldSizeK)
     }
 
     private val cell = arrayOfNulls<Drawable>(13)
@@ -108,8 +112,8 @@ class GameBoard : AppCompatActivity() {
     private fun removeAround(i: Int, k: Int) {
         val isIZero = (i != 0)
         val isKZero = (k != 0)
-        val isIEight = (i != (fieldSize - 1))
-        val isKEight = (k != (fieldSize - 1))
+        val isIEight = (i != (fieldSizeI - 1))
+        val isKEight = (k != (fieldSizeK - 1))
 
         if (isIZero) {
             if (arrayOfCells[i - 1][k]!!.isBomb == 1) {
@@ -150,8 +154,8 @@ class GameBoard : AppCompatActivity() {
         var count = 0
         val isIZero = (i != 0)
         val isKZero = (k != 0)
-        val isIEight = (i != (fieldSize - 1))
-        val isKEight = (k != (fieldSize - 1))
+        val isIEight = (i != (fieldSizeI - 1))
+        val isKEight = (k != (fieldSizeK - 1))
 
         if (isIZero) {
             if (arrayOfCells[i - 1][k]!!.isBomb == 1) count++
@@ -183,8 +187,8 @@ class GameBoard : AppCompatActivity() {
     private fun openFieldByClick(i: Int, k: Int) {
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
-        val isINotEight = (i != (fieldSize - 1))
-        val isKNotEight = (k != (fieldSize - 1))
+        val isINotEight = (i != (fieldSizeI - 1))
+        val isKNotEight = (k != (fieldSizeK - 1))
         if (isINotZero && !arrayOfCells[i - 1][k]!!.isOpened) {
             arrayOfCells[i - 1][k]!!.isOpened = true
             click(i - 1, k)
@@ -224,9 +228,9 @@ class GameBoard : AppCompatActivity() {
             arrayOfCells[i][k]!!.isChecked = true
             numbOfOpened++
         }
-        if (numbOfOpened == ((fieldSize) * (fieldSize) - bombs)) {
-            for (a in 0 until fieldSize) {
-                for (b in 0 until fieldSize) {
+        if (numbOfOpened == ((fieldSizeI) * (fieldSizeK) - bombs)) {
+            for (a in 0 until fieldSizeI) {
+                for (b in 0 until fieldSizeK) {
                     arrayOfCells[a][b]!!.isClickable = false
                 }
             }
@@ -282,8 +286,8 @@ class GameBoard : AppCompatActivity() {
 //                        }
                     }
                     if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) removeAround(i, k)
-                    for (a in 0 until fieldSize) {
-                        for (b in 0 until fieldSize) {
+                    for (a in 0 until fieldSizeI) {
+                        for (b in 0 until fieldSizeK) {
                             numbOfBombs(a, b)
                         }
                     }
@@ -306,9 +310,9 @@ class GameBoard : AppCompatActivity() {
                         arrayOfCells[i][k]!!.isChecked = true
                         numbOfOpened++
                     }
-                    if (numbOfOpened == ((fieldSize) * (fieldSize) - bombs)) {
-                        for (a in 0 until fieldSize) {
-                            for (b in 0 until fieldSize) {
+                    if (numbOfOpened == ((fieldSizeI) * (fieldSizeK) - bombs)) {
+                        for (a in 0 until fieldSizeI) {
+                            for (b in 0 until fieldSizeK) {
                                 arrayOfCells[a][b]!!.isClickable = false
                             }
                         }
@@ -329,8 +333,8 @@ class GameBoard : AppCompatActivity() {
                 }
                 if (arrayOfCells[i][k]!!.isBomb == 1 && arrayOfCells[i][k]!!.isClickable) {
                     chronometer.stop()
-                    for (a in 0 until fieldSize) {
-                        for (b in 0 until fieldSize) {
+                    for (a in 0 until fieldSizeI) {
+                        for (b in 0 until fieldSizeK) {
                             arrayOfCells[a][b]!!.isClickable = false
                             if (arrayOfCells[a][b]!!.isBomb == 1) {
                                 val redBomb = LayerDrawable(arrayOf(cell[3], cell[1]))
@@ -349,9 +353,9 @@ class GameBoard : AppCompatActivity() {
         size: LinearLayout.LayoutParams,
         row: LinearLayout.LayoutParams
     ) {
-        for (i in 0 until fieldSize) {
+        for (i in 0 until fieldSizeI) {
             val linRow = LinearLayout(this)
-            for (k in 0 until fieldSize) {
+            for (k in 0 until fieldSizeK) {
                 fieldArray[i][k] = ImageView(this)
                 fieldArray[i][k]!!.background = cell[4]
                 arrayOfCells[i][k]!!.isOpened = false
@@ -365,30 +369,29 @@ class GameBoard : AppCompatActivity() {
 
     private fun fieldDesign() {
         newGame()
+        fieldSize = if (fieldSizeK > fieldSizeI) fieldSizeK
+        else fieldSizeI
         val cellSize = 8000 / fieldSize
+        val cellSizeI = 8000 / fieldSizeI
+        val cellSizeK = 8000 / fieldSizeK
         val row: LinearLayout.LayoutParams =
             LinearLayout.LayoutParams(fieldSize * cellSize, cellSize)
         val size = LinearLayout.LayoutParams(cellSize, cellSize)
         val switcher = findViewById<View>(R.id.switcher) as ToggleButton
         val field = findViewById<View>(R.id.field) as LinearLayout
-        for (i in 0 until fieldSize) {
-            for (k in 0 until fieldSize) {
+        for (i in 0 until fieldSizeI) {
+            for (k in 0 until fieldSizeK) {
                 arrayOfCells[i][k] = FieldCell()
             }
         }
         for (j in 0..bombs) {
-            val i = Random.nextInt(0, fieldSize)
-            val k = Random.nextInt(0, fieldSize)
+            val i = Random.nextInt(0, fieldSizeI)
+            val k = Random.nextInt(0, fieldSizeK)
             if (arrayOfCells[i][k]!!.isBomb == 0) arrayOfCells[i][k]!!.isBomb = 1
         }
         forFun(field, switcher, size, row)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("states", "ActivityTwo: onDestroy()")
-        Log.d("states", "${searchScreen()}")
-    }
 
     private var savedTime: Long = 0
     override fun onPause() {
