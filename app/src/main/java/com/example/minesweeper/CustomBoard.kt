@@ -23,7 +23,7 @@ class CustomBoard : AppCompatActivity() {
     fun toGameBoard(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
         val arr = findMaxBombs()
-        intent.putExtra("fieldSize", 10)
+        intent.putExtra("gameMode", "Custom")
         intent.putExtra("fieldSizeI", arr[0])
         intent.putExtra("fieldSizeK", arr[1])
         intent.putExtra("numbOfBombs", arr[2])
@@ -35,16 +35,16 @@ class CustomBoard : AppCompatActivity() {
         val pickerK = findViewById<com.shawnlin.numberpicker.NumberPicker>(R.id.column)
         val pickerBombs = findViewById<com.shawnlin.numberpicker.NumberPicker>(R.id.numbOfBombs)
         var boardSize = 0
-        var ISize = 5
-        var KSize = 5
+        var iSize = 5
+        var kSize = 5
         pickerI.setOnValueChangedListener {_, _, newVal ->
-            ISize = newVal
-            boardSize = ISize * KSize
+            iSize = newVal
+            boardSize = iSize * kSize
             pickerBombs.maxValue = boardSize / 2
         }
         pickerK.setOnValueChangedListener {_, _, newVal ->
-            KSize = newVal
-            boardSize = ISize * KSize
+            kSize = newVal
+            boardSize = iSize * kSize
             pickerBombs.maxValue = boardSize / 2
         }
         return arrayOf(pickerI.value, pickerK.value, pickerBombs.value)

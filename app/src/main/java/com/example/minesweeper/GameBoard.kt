@@ -1,5 +1,6 @@
 package com.example.minesweeper
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -14,12 +15,12 @@ import com.otaliastudios.zoom.ZoomLayout
 import kotlin.random.Random
 
 class GameBoard : AppCompatActivity() {
-    private var fieldSize = 9
     private var fieldSizeI = 9
     private var fieldSizeK = 9
     private var bombs = 10
     private var numbOfOpened = 0
     private var isFirstClick = true
+    private var gameMode = ""
 
     private lateinit var chronometer: Chronometer
     private var isStarted = false
@@ -33,9 +34,10 @@ class GameBoard : AppCompatActivity() {
         zoom.setAlignment(Alignment.NONE_HORIZONTAL)
         zoom.setMaxZoom(10.0F)
 
-        fieldSize = intent.getIntExtra("fieldSize", 9)
         fieldSizeI = intent.getIntExtra("fieldSizeI", 9)
         fieldSizeK = intent.getIntExtra("fieldSizeK", 9)
+        gameMode = intent.getStringExtra("gameMode").toString()
+
         bombs = intent.getIntExtra("numbOfBombs", 10)
 
         fieldArray = Array(fieldSizeI) {
@@ -71,10 +73,10 @@ class GameBoard : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private var fieldArray = Array(fieldSizeI) {
+    private var fieldArray = Array(fieldSizeI) { //для визуального поля
         arrayOfNulls<ImageView>(fieldSizeK)
     }
-    private var arrayOfCells = Array(fieldSizeI) {
+    private var arrayOfCells = Array(fieldSizeI) { //для определения каждой клетки
         arrayOfNulls<FieldCell>(fieldSizeK)
     }
 
@@ -95,43 +97,85 @@ class GameBoard : AppCompatActivity() {
         cell[12] = this.resources.getDrawable(R.drawable.eight)
     }
 
-    private fun relocateBomb(i: Int, k: Int) {
+    private fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
         var isRelocated = false
         arrayOfCells[i][k]!!.isBomb = 0
         arrayOfCells[i][k]!!.isRelocated = true
         while (!isRelocated) {
-            val a = Random.nextInt(0, fieldSize)
-            val b = Random.nextInt(0, fieldSize)
-            if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i && b != k) && !arrayOfCells[a][b]!!.isRelocated) {
+            val a = Random.nextInt(0, fieldSizeI)
+            val b = Random.nextInt(0, fieldSizeK)
+            if (arrayOfCells[a][b]!!.isBomb == 0 && a != i && b != k && !arrayOfCells[a][b]!!.isRelocated) {
                 arrayOfCells[a][b]!!.isBomb = 1
                 isRelocated = true
             }
         }
     }
 
-    private fun removeAround(i: Int, k: Int) {
+    //    private fun isWin(): Int {
+//        var cc = 0
+//        for (a in 0 until fieldSizeI) {
+//            for (b in 0 until fieldSizeK) {
+//                if (arrayOfCells[a][b]!!.isOpened) cc++
+//            }
+//        }
+//        return cc
+//    }
+
+    private fun timeStrToSeconds(str: String): Int {
+        val parts = str.split(":")
+        var result = 0
+        for (part in parts) {
+            val number = part.toInt()
+            result = result * 60 + number
+        }
+        return result
+    }
+
+    private fun isWon() {
+        if (numbOfOpened == ((fieldSizeI) * (fieldSizeK)) - bombs) {
+            chronometer.stop()
+            val time = chronometer.text.toString()
+            val sharedPreference = getSharedPreferences("ChronometerTime", MODE_PRIVATE)
+            val editor = sharedPreference.edit()
+            Log.d("GameMode$gameMode", "${sharedPreference.getInt("Base$gameMode", 0)}")
+            if (sharedPreference.getInt("Base$gameMode", 0) == 0) {
+                editor.putString(gameMode, time)
+                editor.putInt("Base$gameMode", timeStrToSeconds(time))
+                editor.apply()
+            }
+            if (sharedPreference.getInt("Base$gameMode", 0) > timeStrToSeconds(time)) {
+                Log.d(
+                    "GameMode$gameMode",
+                    "${sharedPreference.getInt("Base$gameMode", 0)} ${timeStrToSeconds(time)}"
+                )
+                editor.putString(gameMode, time)
+                editor.putInt("Base$gameMode", timeStrToSeconds(time))
+                editor.apply()
+            }
+            Log.d("Game Mode $gameMode", "${timeStrToSeconds(time)}")
+            for (a in 0 until fieldSizeI) {
+                for (b in 0 until fieldSizeK) {
+                    arrayOfCells[a][b]!!.isClickable = false
+                }
+            }
+            Toast.makeText(this, "You won", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun removeAround(i: Int, k: Int) { // перемещает бомбы вокруг клетки
         val isIZero = (i != 0)
         val isKZero = (k != 0)
         val isIEight = (i != (fieldSizeI - 1))
         val isKEight = (k != (fieldSizeK - 1))
 
         if (isIZero) {
-            if (arrayOfCells[i - 1][k]!!.isBomb == 1) {
-//                arrayOfCells[i - 1][k]!!.isRelocated = true
-                relocateBomb(i - 1, k)
-            }
+            if (arrayOfCells[i - 1][k]!!.isBomb == 1) relocateBomb(i - 1, k)
             if (isKZero) {
-                if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) {
-//                    arrayOfCells[i - 1][k - 1]!!.isRelocated = true
-                    relocateBomb(i - 1, k - 1)
-                }
+                if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) relocateBomb(i - 1, k - 1)
             }
         }
         if (isIEight) {
-            if (arrayOfCells[i + 1][k]!!.isBomb == 1) {
-//                arrayOfCells[i + 1][k]!!.isRelocated = true
-                relocateBomb(i + 1, k)
-            }
+            if (arrayOfCells[i + 1][k]!!.isBomb == 1) relocateBomb(i + 1, k)
             if (isKEight) {
                 if (arrayOfCells[i + 1][k + 1]!!.isBomb == 1) relocateBomb(i + 1, k + 1)
             }
@@ -150,7 +194,7 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    private fun numbOfBombs(i: Int, k: Int) {
+    private fun numbOfBombs(i: Int, k: Int) { // кол-во бомб на клетке
         var count = 0
         val isIZero = (i != 0)
         val isKZero = (k != 0)
@@ -184,90 +228,133 @@ class GameBoard : AppCompatActivity() {
         arrayOfCells[i][k]!!.value = count
     }
 
-    private fun openFieldByClick(i: Int, k: Int) {
+    private fun openFieldByClick(i: Int, k: Int) { // открытие пустых пространств на поле
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
         val isINotEight = (i != (fieldSizeI - 1))
         val isKNotEight = (k != (fieldSizeK - 1))
+
         if (isINotZero && !arrayOfCells[i - 1][k]!!.isOpened) {
             arrayOfCells[i - 1][k]!!.isOpened = true
             click(i - 1, k)
-            if (isKNotZero && !arrayOfCells[i - 1][k - 1]!!.isOpened) {
-                arrayOfCells[i - 1][k - 1]!!.isOpened = true
-                click(i - 1, k - 1)
-            }
         }
+
+        if (isINotZero && isKNotZero && !arrayOfCells[i - 1][k - 1]!!.isOpened) {
+            arrayOfCells[i - 1][k - 1]!!.isOpened = true
+            click(i - 1, k - 1)
+        }
+
         if (isINotEight && !arrayOfCells[i + 1][k]!!.isOpened) {
             arrayOfCells[i + 1][k]!!.isOpened = true
             click(i + 1, k)
-            if (isKNotEight && !arrayOfCells[i + 1][k + 1]!!.isOpened) {
-                arrayOfCells[i + 1][k + 1]!!.isOpened = true
-                click(i + 1, k + 1)
-            }
         }
+
+        if (isINotEight && isKNotEight && !arrayOfCells[i + 1][k + 1]!!.isOpened) {
+            arrayOfCells[i + 1][k + 1]!!.isOpened = true
+            click(i + 1, k + 1)
+        }
+
         if (isKNotZero && !arrayOfCells[i][k - 1]!!.isOpened) {
             arrayOfCells[i][k - 1]!!.isOpened = true
             click(i, k - 1)
-            if (isINotEight && !arrayOfCells[i + 1][k - 1]!!.isOpened) {
-                arrayOfCells[i + 1][k - 1]!!.isOpened = true
-                click(i + 1, k - 1)
-            }
         }
+
+        if (isKNotZero && isINotEight && !arrayOfCells[i + 1][k - 1]!!.isOpened) {
+            arrayOfCells[i + 1][k - 1]!!.isOpened = true
+            click(i + 1, k - 1)
+        }
+
         if (isKNotEight && !arrayOfCells[i][k + 1]!!.isOpened) {
             arrayOfCells[i][k + 1]!!.isOpened = true
             click(i, k + 1)
-            if (isINotZero && !arrayOfCells[i - 1][k + 1]!!.isOpened) {
-                arrayOfCells[i - 1][k + 1]!!.isOpened = true
-                click(i - 1, k + 1)
-            }
+        }
+
+        if (isKNotEight && isINotZero && !arrayOfCells[i - 1][k + 1]!!.isOpened) {
+            arrayOfCells[i - 1][k + 1]!!.isOpened = true
+            click(i - 1, k + 1)
         }
     }
 
-    private fun click(i: Int, k: Int) {
+    private fun click(i: Int, k: Int) { // открывает клетку
         if (arrayOfCells[i][k]!!.isBomb == 0 && !arrayOfCells[i][k]!!.isChecked) {
             arrayOfCells[i][k]!!.isChecked = true
-            numbOfOpened++
-        }
-        if (numbOfOpened == ((fieldSizeI) * (fieldSizeK) - bombs)) {
-            for (a in 0 until fieldSizeI) {
-                for (b in 0 until fieldSizeK) {
-                    arrayOfCells[a][b]!!.isClickable = false
-                }
-            }
-            Toast.makeText(this, "U win", Toast.LENGTH_SHORT).show()
         }
 
-        if (arrayOfCells[i][k]!!.isBomb == 0 && arrayOfCells[i][k]!!.isClickable) {
+        if (arrayOfCells[i][k]!!.isBomb == 0) {
             val bombs = arrayOfCells[i][k]!!.value
-            if (bombs == 0) fieldArray[i][k]!!.background = cell[0]
-            if (bombs == 1) fieldArray[i][k]!!.background = cell[5]
-            if (bombs == 2) fieldArray[i][k]!!.background = cell[6]
-            if (bombs == 3) fieldArray[i][k]!!.background = cell[7]
-            if (bombs == 4) fieldArray[i][k]!!.background = cell[8]
-            if (bombs == 5) fieldArray[i][k]!!.background = cell[9]
-            if (bombs == 6) fieldArray[i][k]!!.background = cell[10]
-            if (bombs == 7) fieldArray[i][k]!!.background = cell[11]
-            if (bombs == 8) fieldArray[i][k]!!.background = cell[12]
+            if (bombs == 0) {
+                fieldArray[i][k]!!.background = cell[0]
+                numbOfOpened++
+                arrayOfCells[i][k]!!.isOpened = true
+            } else if (bombs in 1..8){
+                fieldArray[i][k]!!.background = cell[bombs + 4]
+                numbOfOpened++
+                arrayOfCells[i][k]!!.isOpened = true
+            }
+//            if (bombs == 1) {
+//                fieldArray[i][k]!!.background = cell[5]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 2) {
+//                fieldArray[i][k]!!.background = cell[6]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 3) {
+//                fieldArray[i][k]!!.background = cell[7]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 4) {
+//                fieldArray[i][k]!!.background = cell[8]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 5) {
+//                fieldArray[i][k]!!.background = cell[9]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 6) {
+//                fieldArray[i][k]!!.background = cell[10]
+//                numbOfOpened++
+//            }
+//            if (bombs == 7) {
+//                fieldArray[i][k]!!.background = cell[11]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+//            if (bombs == 8) {
+//                fieldArray[i][k]!!.background = cell[12]
+//                numbOfOpened++
+//                arrayOfCells[i][k]!!.isOpened = true
+//            }
+            arrayOfCells[i][k]!!.isClickable = false
+            isWon()
+
         }
-        if (arrayOfCells[i][k]!!.value == 0 && arrayOfCells[i][k]!!.isClickable) {
+        if (arrayOfCells[i][k]!!.value == 0) {
             openFieldByClick(i, k)
         }
     }
 
     private fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
         fieldArray[i][k]!!.setOnClickListener {
-            if (switcher.isChecked) {
+            if (switcher.isChecked) { // режим флага
                 if (!arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable && !arrayOfCells[i][k]!!.isOpened) {
                     val finalDrawable = LayerDrawable(arrayOf(cell[4], cell[2]))
+//                    numbOfOpened++
                     fieldArray[i][k]!!.background = finalDrawable
                     arrayOfCells[i][k]!!.isFlag = true
                 } else if (arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable) {
                     fieldArray[i][k]!!.background = cell[4]
+//                    numbOfOpened--
                     arrayOfCells[i][k]!!.isFlag = false
                 }
-            } else if (!switcher.isChecked) {
+            } else if (!switcher.isChecked && arrayOfCells[i][k]!!.isClickable) { // режим не флага
 
-                if (isFirstClick) {
+                if (isFirstClick) { // для первого клика
                     chronometerStart()
                     isStarted = true
                     chronometer.start()
@@ -275,58 +362,132 @@ class GameBoard : AppCompatActivity() {
                     if (arrayOfCells[i][k]!!.isBomb == 1) {
                         arrayOfCells[i][k]!!.isBomb = 0
                         relocateBomb(i, k)
-//                        var isRelocated = false
-//                        while (!isRelocated) {
-//                            val a = Random.nextInt(0, fieldSize)
-//                            val b = Random.nextInt(0, fieldSize)
-//                            if (arrayOfCells[a][b]!!.isBomb == 0 && (a != i || b != k)) {
-//                                arrayOfCells[a][b]!!.isBomb = 1
-//                                isRelocated = true
-//                            }
-//                        }
                     }
-                    if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) removeAround(i, k)
-                    for (a in 0 until fieldSizeI) {
+
+                    if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) removeAround( // убираем бомбы вокруг
+                        i,
+                        k
+                    )
+                    for (a in 0 until fieldSizeI) { // пересчитываем количество бомб
                         for (b in 0 until fieldSizeK) {
                             numbOfBombs(a, b)
                         }
                     }
                     val bombs = arrayOfCells[i][k]!!.value
-                    if (bombs == 0) fieldArray[i][k]!!.background = cell[0]
-                    if (bombs == 1) fieldArray[i][k]!!.background = cell[5]
-                    if (bombs == 2) fieldArray[i][k]!!.background = cell[6]
-                    if (bombs == 3) fieldArray[i][k]!!.background = cell[7]
-                    if (bombs == 4) fieldArray[i][k]!!.background = cell[8]
-                    if (bombs == 5) fieldArray[i][k]!!.background = cell[9]
-                    if (bombs == 6) fieldArray[i][k]!!.background = cell[10]
-                    if (bombs == 7) fieldArray[i][k]!!.background = cell[11]
-                    if (bombs == 8) fieldArray[i][k]!!.background = cell[12]
-                    isFirstClick = false
-                }
+                    if (arrayOfCells[i][k]!!.isBomb == 0) {
 
-                if (arrayOfCells[i][k]!!.isBomb == 0 && arrayOfCells[i][k]!!.isClickable) {
-                    val bombs = arrayOfCells[i][k]!!.value
-                    if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
-                        arrayOfCells[i][k]!!.isChecked = true
-                        numbOfOpened++
-                    }
-                    if (numbOfOpened == ((fieldSizeI) * (fieldSizeK) - bombs)) {
-                        for (a in 0 until fieldSizeI) {
-                            for (b in 0 until fieldSizeK) {
-                                arrayOfCells[a][b]!!.isClickable = false
-                            }
+                        if (bombs == 0) {
+                            fieldArray[i][k]!!.background = cell[0]
+                            numbOfOpened++
+                            arrayOfCells[i][k]!!.isOpened = true
+                        } else if (bombs in 1..8){
+                            fieldArray[i][k]!!.background = cell[bombs + 4]
+                            numbOfOpened++
+                            arrayOfCells[i][k]!!.isOpened = true
                         }
-                        Toast.makeText(this, "U win", Toast.LENGTH_SHORT).show()
+//                        if (bombs == 1) {
+//                            fieldArray[i][k]!!.background = cell[5]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 2) {
+//                            fieldArray[i][k]!!.background = cell[6]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 3) {
+//                            fieldArray[i][k]!!.background = cell[7]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 4) {
+//                            fieldArray[i][k]!!.background = cell[8]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 5) {
+//                            fieldArray[i][k]!!.background = cell[9]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 6) {
+//                            fieldArray[i][k]!!.background = cell[10]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 7) {
+//                            fieldArray[i][k]!!.background = cell[11]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 8) {
+//                            fieldArray[i][k]!!.background = cell[12]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+                        arrayOfCells[i][k]!!.isClickable = false
+                        isWon()
                     }
-                    if (bombs == 0) fieldArray[i][k]!!.background = cell[0]
-                    if (bombs == 1) fieldArray[i][k]!!.background = cell[5]
-                    if (bombs == 2) fieldArray[i][k]!!.background = cell[6]
-                    if (bombs == 3) fieldArray[i][k]!!.background = cell[7]
-                    if (bombs == 4) fieldArray[i][k]!!.background = cell[8]
-                    if (bombs == 5) fieldArray[i][k]!!.background = cell[9]
-                    if (bombs == 6) fieldArray[i][k]!!.background = cell[10]
-                    if (bombs == 7) fieldArray[i][k]!!.background = cell[11]
-                    if (bombs == 8) fieldArray[i][k]!!.background = cell[12]
+                    isFirstClick = false
+                } else {
+                    if (arrayOfCells[i][k]!!.isBomb == 0) {
+                        val bombs = arrayOfCells[i][k]!!.value
+                        if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
+                            arrayOfCells[i][k]!!.isChecked = true
+                        }
+
+                        if (bombs == 0) {
+                            fieldArray[i][k]!!.background = cell[0]
+                            numbOfOpened++
+                            arrayOfCells[i][k]!!.isOpened = true
+                        } else  if (bombs in 1..8){
+                            fieldArray[i][k]!!.background = cell[bombs + 4]
+                            numbOfOpened++
+                            arrayOfCells[i][k]!!.isOpened = true
+                        }
+//                        if (bombs == 1) {
+//                            fieldArray[i][k]!!.background = cell[5]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 2) {
+//                            fieldArray[i][k]!!.background = cell[6]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 3) {
+//                            fieldArray[i][k]!!.background = cell[7]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 4) {
+//                            fieldArray[i][k]!!.background = cell[8]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 5) {
+//                            fieldArray[i][k]!!.background = cell[9]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 6) {
+//                            fieldArray[i][k]!!.background = cell[10]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 7) {
+//                            fieldArray[i][k]!!.background = cell[11]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+//                        if (bombs == 8) {
+//                            fieldArray[i][k]!!.background = cell[12]
+//                            numbOfOpened++
+//                            arrayOfCells[i][k]!!.isOpened = true
+//                        }
+                        arrayOfCells[i][k]!!.isClickable = false
+                        isWon()
+                    }
                 }
                 if (arrayOfCells[i][k]!!.value == 0) {
                     openFieldByClick(i, k)
@@ -369,13 +530,9 @@ class GameBoard : AppCompatActivity() {
 
     private fun fieldDesign() {
         newGame()
-        fieldSize = if (fieldSizeK > fieldSizeI) fieldSizeK
-        else fieldSizeI
-        val cellSize = 8000 / fieldSize
-        val cellSizeI = 8000 / fieldSizeI
-        val cellSizeK = 8000 / fieldSizeK
+        val cellSize = searchScreen() / fieldSizeI
         val row: LinearLayout.LayoutParams =
-            LinearLayout.LayoutParams(fieldSize * cellSize, cellSize)
+            LinearLayout.LayoutParams(fieldSizeK * cellSize, cellSize)
         val size = LinearLayout.LayoutParams(cellSize, cellSize)
         val switcher = findViewById<View>(R.id.switcher) as ToggleButton
         val field = findViewById<View>(R.id.field) as LinearLayout
@@ -384,10 +541,12 @@ class GameBoard : AppCompatActivity() {
                 arrayOfCells[i][k] = FieldCell()
             }
         }
-        for (j in 0..bombs) {
+        for (j in 0 until bombs) {
             val i = Random.nextInt(0, fieldSizeI)
             val k = Random.nextInt(0, fieldSizeK)
-            if (arrayOfCells[i][k]!!.isBomb == 0) arrayOfCells[i][k]!!.isBomb = 1
+            if (arrayOfCells[i][k]!!.isBomb == 0) {
+                arrayOfCells[i][k]!!.isBomb = 1
+            }
         }
         forFun(field, switcher, size, row)
     }
@@ -408,6 +567,6 @@ class GameBoard : AppCompatActivity() {
     }
 
     private fun searchScreen(): Int {
-        return (this.resources.displayMetrics.widthPixels)
+        return (this.resources.displayMetrics.widthPixels) * 10
     }
 }
