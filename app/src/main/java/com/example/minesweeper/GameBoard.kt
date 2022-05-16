@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.otaliastudios.zoom.Alignment
 import com.otaliastudios.zoom.ZoomLayout
+import java.security.SecureRandom
 import kotlin.random.Random
 
 class GameBoard : AppCompatActivity() {
@@ -110,16 +111,6 @@ class GameBoard : AppCompatActivity() {
             }
         }
     }
-
-    //    private fun isWin(): Int {
-//        var cc = 0
-//        for (a in 0 until fieldSizeI) {
-//            for (b in 0 until fieldSizeK) {
-//                if (arrayOfCells[a][b]!!.isOpened) cc++
-//            }
-//        }
-//        return cc
-//    }
 
     private fun timeStrToSeconds(str: String): Int {
         val parts = str.split(":")
@@ -542,10 +533,12 @@ class GameBoard : AppCompatActivity() {
             }
         }
         for (j in 0 until bombs) {
-            val i = Random.nextInt(0, fieldSizeI)
-            val k = Random.nextInt(0, fieldSizeK)
-            if (arrayOfCells[i][k]!!.isBomb == 0) {
-                arrayOfCells[i][k]!!.isBomb = 1
+            val secureRandom = SecureRandom()
+            val a = secureRandom.nextInt(fieldSizeI)
+            val b = secureRandom.nextInt(fieldSizeI)
+            if (arrayOfCells[a][b]!!.isBomb == 0) {
+                arrayOfCells[a][b]!!.isBomb = 1
+                Log.d("randomBombs","$a $b")
             }
         }
         forFun(field, switcher, size, row)
