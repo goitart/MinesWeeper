@@ -1,6 +1,5 @@
 package com.example.minesweeper
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -8,12 +7,12 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.otaliastudios.zoom.Alignment
 import com.otaliastudios.zoom.ZoomLayout
 import java.security.SecureRandom
-import kotlin.random.Random
 
 class GameBoard : AppCompatActivity() {
     private var fieldSizeI = 9
@@ -30,6 +29,10 @@ class GameBoard : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("states", "ActivityTwo: onCreate()")
         setContentView(R.layout.activity_game_board)
+        val window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.statusBarColor = this.resources.getColor(R.color.backgroundColor)
 
         val zoom = findViewById<View>(R.id.layoutForField) as ZoomLayout
         zoom.setAlignment(Alignment.NONE_HORIZONTAL)
@@ -100,11 +103,13 @@ class GameBoard : AppCompatActivity() {
 
     private fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
         var isRelocated = false
+
         arrayOfCells[i][k]!!.isBomb = 0
         arrayOfCells[i][k]!!.isRelocated = true
         while (!isRelocated) {
-            val a = Random.nextInt(0, fieldSizeI)
-            val b = Random.nextInt(0, fieldSizeK)
+            val secureRandom = SecureRandom()
+            val a = secureRandom.nextInt(fieldSizeI)
+            val b = secureRandom.nextInt(fieldSizeI)
             if (arrayOfCells[a][b]!!.isBomb == 0 && a != i && b != k && !arrayOfCells[a][b]!!.isRelocated) {
                 arrayOfCells[a][b]!!.isBomb = 1
                 isRelocated = true
@@ -277,50 +282,11 @@ class GameBoard : AppCompatActivity() {
                 fieldArray[i][k]!!.background = cell[0]
                 numbOfOpened++
                 arrayOfCells[i][k]!!.isOpened = true
-            } else if (bombs in 1..8){
+            } else if (bombs in 1..8) {
                 fieldArray[i][k]!!.background = cell[bombs + 4]
                 numbOfOpened++
                 arrayOfCells[i][k]!!.isOpened = true
             }
-//            if (bombs == 1) {
-//                fieldArray[i][k]!!.background = cell[5]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 2) {
-//                fieldArray[i][k]!!.background = cell[6]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 3) {
-//                fieldArray[i][k]!!.background = cell[7]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 4) {
-//                fieldArray[i][k]!!.background = cell[8]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 5) {
-//                fieldArray[i][k]!!.background = cell[9]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 6) {
-//                fieldArray[i][k]!!.background = cell[10]
-//                numbOfOpened++
-//            }
-//            if (bombs == 7) {
-//                fieldArray[i][k]!!.background = cell[11]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
-//            if (bombs == 8) {
-//                fieldArray[i][k]!!.background = cell[12]
-//                numbOfOpened++
-//                arrayOfCells[i][k]!!.isOpened = true
-//            }
             arrayOfCells[i][k]!!.isClickable = false
             isWon()
 
@@ -371,119 +337,40 @@ class GameBoard : AppCompatActivity() {
                             fieldArray[i][k]!!.background = cell[0]
                             numbOfOpened++
                             arrayOfCells[i][k]!!.isOpened = true
-                        } else if (bombs in 1..8){
+                        } else if (bombs in 1..8) {
                             fieldArray[i][k]!!.background = cell[bombs + 4]
                             numbOfOpened++
                             arrayOfCells[i][k]!!.isOpened = true
                         }
-//                        if (bombs == 1) {
-//                            fieldArray[i][k]!!.background = cell[5]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 2) {
-//                            fieldArray[i][k]!!.background = cell[6]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 3) {
-//                            fieldArray[i][k]!!.background = cell[7]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 4) {
-//                            fieldArray[i][k]!!.background = cell[8]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 5) {
-//                            fieldArray[i][k]!!.background = cell[9]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 6) {
-//                            fieldArray[i][k]!!.background = cell[10]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 7) {
-//                            fieldArray[i][k]!!.background = cell[11]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 8) {
-//                            fieldArray[i][k]!!.background = cell[12]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
                         arrayOfCells[i][k]!!.isClickable = false
                         isWon()
                     }
                     isFirstClick = false
-                } else {
-                    if (arrayOfCells[i][k]!!.isBomb == 0) {
-                        val bombs = arrayOfCells[i][k]!!.value
-                        if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
-                            arrayOfCells[i][k]!!.isChecked = true
-                        }
+                } else if (arrayOfCells[i][k]!!.isBomb == 0) {
+                    val bombs = arrayOfCells[i][k]!!.value
+                    if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
+                        arrayOfCells[i][k]!!.isChecked = true
+                    }
 
-                        if (bombs == 0) {
-                            fieldArray[i][k]!!.background = cell[0]
-                            numbOfOpened++
-                            arrayOfCells[i][k]!!.isOpened = true
-                        } else  if (bombs in 1..8){
-                            fieldArray[i][k]!!.background = cell[bombs + 4]
-                            numbOfOpened++
-                            arrayOfCells[i][k]!!.isOpened = true
-                        }
-//                        if (bombs == 1) {
-//                            fieldArray[i][k]!!.background = cell[5]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 2) {
-//                            fieldArray[i][k]!!.background = cell[6]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 3) {
-//                            fieldArray[i][k]!!.background = cell[7]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 4) {
-//                            fieldArray[i][k]!!.background = cell[8]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 5) {
-//                            fieldArray[i][k]!!.background = cell[9]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 6) {
-//                            fieldArray[i][k]!!.background = cell[10]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 7) {
-//                            fieldArray[i][k]!!.background = cell[11]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-//                        if (bombs == 8) {
-//                            fieldArray[i][k]!!.background = cell[12]
-//                            numbOfOpened++
-//                            arrayOfCells[i][k]!!.isOpened = true
-//                        }
-                        arrayOfCells[i][k]!!.isClickable = false
-                        isWon()
+                    if (bombs == 0) {
+                        fieldArray[i][k]!!.background = cell[0]
+                        numbOfOpened++
+                        arrayOfCells[i][k]!!.isOpened = true
+                    } else if (bombs in 1..8) {
+                        fieldArray[i][k]!!.background = cell[bombs + 4]
+                        numbOfOpened++
+                        arrayOfCells[i][k]!!.isOpened = true
+                    }
+                    arrayOfCells[i][k]!!.isClickable = false
+                    isWon()
+                    if (arrayOfCells[i][k]!!.value == 0) {
+                        openFieldByClick(i, k)
                     }
                 }
-                if (arrayOfCells[i][k]!!.value == 0) {
+                if (arrayOfCells[i][k]!!.value == 0 && arrayOfCells[i][k]!!.isBomb == 0) {
                     openFieldByClick(i, k)
                 }
-                if (arrayOfCells[i][k]!!.isBomb == 1 && arrayOfCells[i][k]!!.isClickable) {
+                if (arrayOfCells[i][k]!!.isBomb == 1) {
                     chronometer.stop()
                     for (a in 0 until fieldSizeI) {
                         for (b in 0 until fieldSizeK) {
@@ -538,7 +425,7 @@ class GameBoard : AppCompatActivity() {
             val b = secureRandom.nextInt(fieldSizeI)
             if (arrayOfCells[a][b]!!.isBomb == 0) {
                 arrayOfCells[a][b]!!.isBomb = 1
-                Log.d("randomBombs","$a $b")
+                Log.d("randomBombs", "$a $b")
             }
         }
         forFun(field, switcher, size, row)
