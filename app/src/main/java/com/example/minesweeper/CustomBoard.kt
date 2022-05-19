@@ -28,6 +28,7 @@ class CustomBoard : AppCompatActivity() {
     fun toGameBoard(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
         val arr = findMaxBombs()
+        finishAndRemoveTask()
         intent.putExtra("gameMode", "Custom")
         intent.putExtra("fieldSizeI", arr[0])
         intent.putExtra("fieldSizeK", arr[1])
@@ -50,7 +51,7 @@ class CustomBoard : AppCompatActivity() {
         pickerK.setOnValueChangedListener {_, _, newVal ->
             kSize = newVal
             boardSize = iSize * kSize
-            pickerBombs.maxValue = boardSize / 2
+            pickerBombs.maxValue = boardSize / 3
         }
         return arrayOf(pickerI.value, pickerK.value, pickerBombs.value)
     }

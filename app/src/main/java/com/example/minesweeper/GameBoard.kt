@@ -10,6 +10,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.otaliastudios.zoom.Alignment
 import com.otaliastudios.zoom.ZoomLayout
 import java.security.SecureRandom
@@ -32,7 +33,7 @@ class GameBoard : AppCompatActivity() {
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.statusBarColor = this.resources.getColor(R.color.backgroundColor)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.backgroundColor)
 
         val zoom = findViewById<View>(R.id.layoutForField) as ZoomLayout
         zoom.setAlignment(Alignment.NONE_HORIZONTAL)
@@ -87,29 +88,28 @@ class GameBoard : AppCompatActivity() {
     private val cell = arrayOfNulls<Drawable>(13)
     private fun attributes() {
         cell[0] = null
-        cell[1] = this.resources.getDrawable(R.drawable.new_bomb)
-        cell[2] = this.resources.getDrawable(R.drawable.small_flag)
-        cell[3] = this.resources.getDrawable(R.drawable.red_cell)
-        cell[4] = this.resources.getDrawable(R.drawable.ic_vector_cell)
-        cell[5] = this.resources.getDrawable(R.drawable.one)
-        cell[6] = this.resources.getDrawable(R.drawable.two)
-        cell[7] = this.resources.getDrawable(R.drawable.three)
-        cell[8] = this.resources.getDrawable(R.drawable.four)
-        cell[9] = this.resources.getDrawable(R.drawable.five)
-        cell[10] = this.resources.getDrawable(R.drawable.six)
-        cell[11] = this.resources.getDrawable(R.drawable.seven)
-        cell[12] = this.resources.getDrawable(R.drawable.eight)
+        cell[1] = ContextCompat.getDrawable(this, R.drawable.new_bomb)
+        cell[2] = ContextCompat.getDrawable(this, R.drawable.small_flag)
+        cell[3] = ContextCompat.getDrawable(this, R.drawable.red_cell)
+        cell[4] = ContextCompat.getDrawable(this, R.drawable.ic_vector_cell)
+        cell[5] = ContextCompat.getDrawable(this, R.drawable.one)
+        cell[6] = ContextCompat.getDrawable(this, R.drawable.two)
+        cell[7] = ContextCompat.getDrawable(this, R.drawable.three)
+        cell[8] = ContextCompat.getDrawable(this, R.drawable.four)
+        cell[9] = ContextCompat.getDrawable(this, R.drawable.five)
+        cell[10] = ContextCompat.getDrawable(this, R.drawable.six)
+        cell[11] = ContextCompat.getDrawable(this, R.drawable.seven)
+        cell[12] = ContextCompat.getDrawable(this, R.drawable.eight)
     }
 
-    private fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
+    fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
         var isRelocated = false
-
         arrayOfCells[i][k]!!.isBomb = 0
         arrayOfCells[i][k]!!.isRelocated = true
         while (!isRelocated) {
             val secureRandom = SecureRandom()
             val a = secureRandom.nextInt(fieldSizeI)
-            val b = secureRandom.nextInt(fieldSizeI)
+            val b = secureRandom.nextInt(fieldSizeK)
             if (arrayOfCells[a][b]!!.isBomb == 0 && a != i && b != k && !arrayOfCells[a][b]!!.isRelocated) {
                 arrayOfCells[a][b]!!.isBomb = 1
                 isRelocated = true
@@ -127,28 +127,22 @@ class GameBoard : AppCompatActivity() {
         return result
     }
 
-    private fun isWon() {
+    private fun isWon() { // проверяет победу
         if (numbOfOpened == ((fieldSizeI) * (fieldSizeK)) - bombs) {
             chronometer.stop()
             val time = chronometer.text.toString()
             val sharedPreference = getSharedPreferences("ChronometerTime", MODE_PRIVATE)
             val editor = sharedPreference.edit()
-            Log.d("GameMode$gameMode", "${sharedPreference.getInt("Base$gameMode", 0)}")
             if (sharedPreference.getInt("Base$gameMode", 0) == 0) {
                 editor.putString(gameMode, time)
                 editor.putInt("Base$gameMode", timeStrToSeconds(time))
                 editor.apply()
             }
             if (sharedPreference.getInt("Base$gameMode", 0) > timeStrToSeconds(time)) {
-                Log.d(
-                    "GameMode$gameMode",
-                    "${sharedPreference.getInt("Base$gameMode", 0)} ${timeStrToSeconds(time)}"
-                )
                 editor.putString(gameMode, time)
                 editor.putInt("Base$gameMode", timeStrToSeconds(time))
                 editor.apply()
             }
-            Log.d("Game Mode $gameMode", "${timeStrToSeconds(time)}")
             for (a in 0 until fieldSizeI) {
                 for (b in 0 until fieldSizeK) {
                     arrayOfCells[a][b]!!.isClickable = false
@@ -296,6 +290,20 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
+    private fun gameOver() {
+        chronometer.stop()
+        Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
+        for (a in 0 until fieldSizeI) {
+            for (b in 0 until fieldSizeK) {
+                arrayOfCells[a][b]!!.isClickable = false
+                if (arrayOfCells[a][b]!!.isBomb == 1) {
+                    val redBomb = LayerDrawable(arrayOf(cell[3], cell[1]))
+                    fieldArray[a][b]!!.background = redBomb
+                }
+            }
+        }
+    }
+
     private fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
         fieldArray[i][k]!!.setOnClickListener {
             if (switcher.isChecked) { // режим флага
@@ -371,16 +379,7 @@ class GameBoard : AppCompatActivity() {
                     openFieldByClick(i, k)
                 }
                 if (arrayOfCells[i][k]!!.isBomb == 1) {
-                    chronometer.stop()
-                    for (a in 0 until fieldSizeI) {
-                        for (b in 0 until fieldSizeK) {
-                            arrayOfCells[a][b]!!.isClickable = false
-                            if (arrayOfCells[a][b]!!.isBomb == 1) {
-                                val redBomb = LayerDrawable(arrayOf(cell[3], cell[1]))
-                                fieldArray[a][b]!!.background = redBomb
-                            }
-                        }
-                    }
+                    gameOver()
                 }
             }
         }
@@ -422,7 +421,7 @@ class GameBoard : AppCompatActivity() {
         for (j in 0 until bombs) {
             val secureRandom = SecureRandom()
             val a = secureRandom.nextInt(fieldSizeI)
-            val b = secureRandom.nextInt(fieldSizeI)
+            val b = secureRandom.nextInt(fieldSizeK)
             if (arrayOfCells[a][b]!!.isBomb == 0) {
                 arrayOfCells[a][b]!!.isBomb = 1
                 Log.d("randomBombs", "$a $b")

@@ -17,6 +17,7 @@ class NewGameSettings : AppCompatActivity() {
     }
     fun toBeginnerMode(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
+        finishAndRemoveTask()
         intent.putExtra("gameMode", "Beginner")
         intent.putExtra("fieldSizeI", 9)
         intent.putExtra("fieldSizeK", 9)
@@ -25,6 +26,7 @@ class NewGameSettings : AppCompatActivity() {
     }
     fun toIntermMode(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
+        finishAndRemoveTask()
         intent.putExtra("gameMode", "Intermediate")
         intent.putExtra("fieldSizeI", 16)
         intent.putExtra("fieldSizeK", 16)
@@ -33,20 +35,15 @@ class NewGameSettings : AppCompatActivity() {
     }
     fun toExpertMode(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
+        finishAndRemoveTask()
         intent.putExtra("gameMode", "Expert")
         intent.putExtra("fieldSizeI", 24)
         intent.putExtra("fieldSizeK", 24)
         intent.putExtra("numbOfBombs", 99)
         startActivity(intent)
     }
-    fun toMasterMode(view: View) {
-        val intent = Intent(this, GameBoard :: class.java)
-        intent.putExtra("fieldSizeI", 50)
-        intent.putExtra("fieldSizeK", 50)
-        intent.putExtra("numbOfBombs", 400)
-        startActivity(intent)
-    }
     fun toCustomBoard(view: View) {
+        finishAndRemoveTask()
         val intent = Intent(this, CustomBoard :: class.java)
         startActivity(intent)
     }
