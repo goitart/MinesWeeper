@@ -186,34 +186,38 @@ class GameBoard : AppCompatActivity() {
 
     private fun numbOfBombs(i: Int, k: Int) { // кол-во бомб на клетке
         var count = 0
-        val isIZero = (i != 0)
-        val isKZero = (k != 0)
-        val isIEight = (i != (fieldSizeI - 1))
-        val isKEight = (k != (fieldSizeK - 1))
+        val isINotZero = (i != 0)
+        val isKNotZero = (k != 0)
+        val isINotEight = (i != (fieldSizeI - 1))
+        val isKNotEight = (k != (fieldSizeK - 1))
 
-        if (isIZero) {
+        if (isINotZero) {
             if (arrayOfCells[i - 1][k]!!.isBomb == 1) count++
-            if (isKZero) {
-                if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) count++
-            }
+
         }
-        if (isIEight) {
+        if (isKNotZero && isINotZero) {
+            if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) count++
+        }
+        if (isINotEight) {
             if (arrayOfCells[i + 1][k]!!.isBomb == 1) count++
-            if (isKEight) {
-                if (arrayOfCells[i + 1][k + 1]!!.isBomb == 1) count++
-            }
+
         }
-        if (isKZero) {
+        if (isKNotEight && isINotEight) {
+            if (arrayOfCells[i + 1][k + 1]!!.isBomb == 1) count++
+        }
+        if (isKNotZero) {
             if (arrayOfCells[i][k - 1]!!.isBomb == 1) count++
-            if (isIEight) {
-                if (arrayOfCells[i + 1][k - 1]!!.isBomb == 1) count++
-            }
+
         }
-        if (isKEight) {
+        if (isINotEight && isKNotZero) {
+            if (arrayOfCells[i + 1][k - 1]!!.isBomb == 1) count++
+        }
+        if (isKNotEight) {
             if (arrayOfCells[i][k + 1]!!.isBomb == 1) count++
-            if (isIZero) {
-                if (arrayOfCells[i - 1][k + 1]!!.isBomb == 1) count++
-            }
+
+        }
+        if (isINotZero && isKNotEight) {
+            if (arrayOfCells[i - 1][k + 1]!!.isBomb == 1) count++
         }
         arrayOfCells[i][k]!!.value = count
     }
@@ -307,14 +311,12 @@ class GameBoard : AppCompatActivity() {
     private fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
         fieldArray[i][k]!!.setOnClickListener {
             if (switcher.isChecked) { // режим флага
-                if (!arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable && !arrayOfCells[i][k]!!.isOpened) {
+                if (!arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable) {
                     val finalDrawable = LayerDrawable(arrayOf(cell[4], cell[2]))
-//                    numbOfOpened++
                     fieldArray[i][k]!!.background = finalDrawable
                     arrayOfCells[i][k]!!.isFlag = true
                 } else if (arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable) {
                     fieldArray[i][k]!!.background = cell[4]
-//                    numbOfOpened--
                     arrayOfCells[i][k]!!.isFlag = false
                 }
             } else if (!switcher.isChecked && arrayOfCells[i][k]!!.isClickable) { // режим не флага
