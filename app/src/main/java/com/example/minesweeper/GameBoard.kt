@@ -102,7 +102,7 @@ class GameBoard : AppCompatActivity() {
         cell[12] = ContextCompat.getDrawable(this, R.drawable.eight)
     }
 
-    fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
+    private fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
         var isRelocated = false
         arrayOfCells[i][k]!!.isBomb = 0
         arrayOfCells[i][k]!!.isRelocated = true
