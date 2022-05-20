@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CustomBoard"
+    android:background="?backgroundColor">
+
+    <TextView
+        android:id="@+id/textCustom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50sp"
+        android:layout_marginTop="26sp"
+        android:fontFamily="serif-monospace"
+        android:text="@string/custom_board_size"
+        android:textColor="?colorOnPrimary"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:background="@color/inv"
+        android:onClick="toNewGameSettings"
+        android:padding="10dp"
+        app:srcCompat="@drawable/arrow_back"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textCustom"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/SizePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1">
+
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_centerVertical="true"
+                app:np_dividerColor="@color/inv"
+                app:np_max="100"
+                app:np_min="7"
+                app:np_selectedTextColor="?colorAccent"
+                app:np_selectedTextSize="60sp"
+                app:np_textColor="?colorOnPrimary"
+                app:np_textSize="40sp" />
+
+            <TextView
+                android:id="@+id/cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/row"
+                android:text="@string/x"
+                android:textColor="?colorOnPrimary"
+                android:textSize="50sp" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/column"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/cross"
+                android:layout_centerVertical="true"
+                app:np_dividerColor="@color/inv"
+                app:np_max="100"
+                app:np_min="7"
+                app:np_selectedTextColor="?colorAccent"
+                app:np_selectedTextSize="60sp"
+                app:np_textColor="?colorOnPrimary"
+                app:np_textSize="40sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textForBombs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40sp"
+            android:layout_weight="1"
+            android:fontFamily="serif-monospace"
+            android:text="@string/number_of_bombs"
+            android:textColor="?colorOnPrimary"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/numbOfBombs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_weight="1"
+            app:np_dividerColor="@color/inv"
+            app:np_itemSpacing="40dp"
+            app:np_min="2"
+            app:np_orientation="horizontal"
+            app:np_selectedTextColor="?colorAccent"
+            app:np_selectedTextSize="50sp"
+            app:np_textColor="?colorOnPrimary"
+            app:np_textSize="30sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_weight="1"
+            android:fontFamily="serif-monospace"
+            android:onClick="toGameBoard"
+            android:text="@string/play"
+            android:textColor="?colorOnPrimary"
+            android:textSize="35sp" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

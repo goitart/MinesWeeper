@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?backgroundColor"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/nameOfGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageView"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="170sp"
+        android:layout_toEndOf="@+id/imageView"
+        android:fontFamily="serif-monospace"
+        android:text="@string/game_name"
+        android:textAlignment="textStart"
+        android:textColor="?colorOnPrimary"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="40sp"
+        android:layout_marginTop="200dp"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/bomb" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/nameOfGame"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="130dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/newGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:fontFamily="serif-monospace"
+            android:onClick="toNewGameSettings"
+            android:text="@string/new_game"
+            android:textAlignment="viewStart"
+            android:textColor="?colorOnPrimary"
+            android:textSize="35sp" />
+
+        <Button
+            android:id="@+id/statistic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:fontFamily="serif-monospace"
+            android:onClick="toStatistics"
+            android:text="@string/statistics"
+            android:textAlignment="viewStart"
+            android:textColor="?colorOnPrimary"
+            android:textSize="35sp" />
+    </LinearLayout>
+</RelativeLayout>

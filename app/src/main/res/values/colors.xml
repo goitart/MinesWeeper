@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="backgroundColor">#70777C</color>
+    <color name="inv">#00FFFFFF</color>
+    <color name="iconBack">#353535</color>
+    <color name="darkBack">#2A3136</color>
+    <color name="accentColor">#007FAC</color>
+    <color name="colorPrimary">#8A9297</color>
+    <color name="colorAccent">#007FAC</color>
+    <color name="teal_700">#787296</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="not_white">#091E28</color>
+</resources>
