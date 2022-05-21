@@ -58,7 +58,7 @@
                 android:minWidth="1000dp"
                 android:onClick="toBeginnerMode"
                 android:drawableTop="@drawable/easy"
-                android:text="@string/size_10"
+                android:text="@string/size_9"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
