@@ -43,10 +43,11 @@ class CustomBoard : AppCompatActivity() {
         var boardSize = 0
         var iSize = 5
         var kSize = 5
+        pickerBombs.maxValue = 10
         pickerI.setOnValueChangedListener {_, _, newVal ->
             iSize = newVal
             boardSize = iSize * kSize
-            pickerBombs.maxValue = boardSize / 2
+            pickerBombs.maxValue = boardSize / 3
         }
         pickerK.setOnValueChangedListener {_, _, newVal ->
             kSize = newVal

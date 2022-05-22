@@ -447,7 +447,7 @@ class GameBoard : AppCompatActivity() {
                 arrayOfCells[i][k] = FieldCell()
             }
         }
-        for (j in 0 until bombs + 1) {
+        for (j in 0 until bombs) {
             val secureRandom = SecureRandom()
             val a = secureRandom.nextInt(fieldSizeI)
             val b = secureRandom.nextInt(fieldSizeK)
