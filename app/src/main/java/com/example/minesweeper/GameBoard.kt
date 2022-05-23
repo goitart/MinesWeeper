@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
@@ -28,7 +27,6 @@ class GameBoard : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("states", "ActivityTwo: onCreate()")
         setContentView(R.layout.activity_game_board)
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -359,7 +357,6 @@ class GameBoard : AppCompatActivity() {
 
                     if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) { // убираем бомбы вокруг если они есть
                         removeAround(i, k)
-                        Log.d("isValue", "not $i $k")
                     }
                     for (a in 0 until fieldSizeI) { // пересчитываем количество бомб
                         for (b in 0 until fieldSizeK) {
@@ -447,13 +444,14 @@ class GameBoard : AppCompatActivity() {
                 arrayOfCells[i][k] = FieldCell()
             }
         }
-        for (j in 0 until bombs) {
+        var j = 0
+        while (j != bombs) {
             val secureRandom = SecureRandom()
             val a = secureRandom.nextInt(fieldSizeI)
             val b = secureRandom.nextInt(fieldSizeK)
             if (arrayOfCells[a][b]!!.isBomb == 0) {
                 arrayOfCells[a][b]!!.isBomb = 1
-                Log.d("randomBombs", "$a $b")
+                j ++
             }
         }
         forFun(field, switcher, size, row)
