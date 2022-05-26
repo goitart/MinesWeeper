@@ -128,7 +128,7 @@ class GameBoard : AppCompatActivity() {
         if (numbOfOpened == ((fieldSizeI) * (fieldSizeK)) - bombs) {
             chronometer.stop()
             val time = chronometer.text.toString()
-            val sharedPreference = getSharedPreferences("ChronometerTime", MODE_PRIVATE)
+            val sharedPreference = getSharedPreferences("ChronometerTime", MODE_PRIVATE) // для записи в лидерборд
             val editor = sharedPreference.edit()
             if (sharedPreference.getInt("Base$gameMode", 0) == 0) {
                 editor.putString(gameMode, time)
@@ -311,7 +311,7 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    private fun gameOver() {
+    private fun gameOver() { // открывает все бомбы и заканчивает игру
         chronometer.stop()
         Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
         for (a in 0 until fieldSizeI) {
@@ -380,7 +380,7 @@ class GameBoard : AppCompatActivity() {
                     }
                     isFirstClick = false
 
-                } else if (arrayOfCells[i][k]!!.isBomb == 0) {
+                } else if (arrayOfCells[i][k]!!.isBomb == 0) { // уже не первый клик
                     val bombs = arrayOfCells[i][k]!!.value
                     if (bombs != 0 && !arrayOfCells[i][k]!!.isChecked) {
                         arrayOfCells[i][k]!!.isChecked = true
@@ -397,7 +397,7 @@ class GameBoard : AppCompatActivity() {
                     }
                     arrayOfCells[i][k]!!.isClickable = false
                     isWon()
-                    if (arrayOfCells[i][k]!!.value == 0) {
+                    if (arrayOfCells[i][k]!!.value == 0) { // если клетка пустая открываем поле вокруг
                         openFieldByClick(i, k)
                     }
                 }
@@ -421,7 +421,7 @@ class GameBoard : AppCompatActivity() {
             val linRow = LinearLayout(this)
             for (k in 0 until fieldSizeK) {
                 fieldArray[i][k] = ImageView(this)
-                fieldArray[i][k]!!.background = cell[4]
+                fieldArray[i][k]!!.background = cell[4] // задаем изначальный вид поля
                 arrayOfCells[i][k]!!.isOpened = false
                 numbOfBombs(i, k)
                 if (arrayOfCells[i][k]!!.isEmpty == 1) clickActivity(i, k, switcher)
