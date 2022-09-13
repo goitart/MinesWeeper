@@ -49,10 +49,7 @@ class Statistics : AppCompatActivity() {
         val time4 = findViewById<TextView>(R.id.time4)
         val sharedPreference = getSharedPreferences("ChronometerTime", MODE_PRIVATE)
         val editor = sharedPreference.edit()
-        editor.putString("Beginner", "-")
-        editor.putString("Intermediate", "-")
-        editor.putString("Expert", "-")
-        editor.putString("Custom", "-")
+        editor.clear()
         editor.apply()
         time1.text = "-"
         time2.text = "-"

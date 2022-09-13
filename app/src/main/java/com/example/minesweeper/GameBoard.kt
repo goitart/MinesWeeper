@@ -15,13 +15,10 @@ import com.otaliastudios.zoom.ZoomLayout
 import java.security.SecureRandom
 
 class GameBoard : AppCompatActivity() {
-    private var fieldSizeI = 9
-    private var fieldSizeK = 9
     private var bombs = 10
     private var numbOfOpened = 0
     private var isFirstClick = true
     private var gameMode = ""
-
     private lateinit var chronometer: Chronometer
     private var isStarted = false
 
@@ -37,8 +34,8 @@ class GameBoard : AppCompatActivity() {
         zoom.setAlignment(Alignment.NONE_HORIZONTAL)
         zoom.setMaxZoom(10.0F)
 
-        fieldSizeI = intent.getIntExtra("fieldSizeI", 9)
-        fieldSizeK = intent.getIntExtra("fieldSizeK", 9)
+        val fieldSizeI = intent.getIntExtra("fieldSizeI", 9)
+        val fieldSizeK = intent.getIntExtra("fieldSizeK", 9)
         gameMode = intent.getStringExtra("gameMode").toString()
 
         bombs = intent.getIntExtra("numbOfBombs", 10)
@@ -51,7 +48,7 @@ class GameBoard : AppCompatActivity() {
         }
 
         attributes()
-        fieldDesign()
+        fieldDesign(fieldSizeI, fieldSizeK)
     }
 
     private fun chronometerStart() {
@@ -76,11 +73,11 @@ class GameBoard : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private var fieldArray = Array(fieldSizeI) { //для визуального поля
-        arrayOfNulls<ImageView>(fieldSizeK)
+    private var fieldArray = Array(9) { //для визуального поля
+        arrayOfNulls<ImageView>(9)
     }
-    private var arrayOfCells = Array(fieldSizeI) { //для определения каждой клетки
-        arrayOfNulls<FieldCell>(fieldSizeK)
+    private var arrayOfCells = Array(9) { //для определения каждой клетки
+        arrayOfNulls<FieldCell>(9)
     }
 
     private val cell = arrayOfNulls<Drawable>(13)
@@ -100,7 +97,7 @@ class GameBoard : AppCompatActivity() {
         cell[12] = ContextCompat.getDrawable(this, R.drawable.eight)
     }
 
-    private fun relocateBomb(i: Int, k: Int) { // переставляет бомбу на другое место
+    private fun relocateBomb(i: Int, k: Int, fieldSizeI : Int, fieldSizeK : Int) { // переставляет бомбу на другое место
         var isRelocated = false
         arrayOfCells[i][k]!!.isBomb = 0
         while (!isRelocated) {
@@ -124,7 +121,7 @@ class GameBoard : AppCompatActivity() {
         return result
     }
 
-    private fun isWon() { // проверяет победу
+    private fun isWon(fieldSizeI : Int, fieldSizeK : Int) { // проверяет победу
         if (numbOfOpened == ((fieldSizeI) * (fieldSizeK)) - bombs) {
             chronometer.stop()
             val time = chronometer.text.toString()
@@ -149,7 +146,7 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    private fun removeAround(i: Int, k: Int) { // перемещает бомбы вокруг клетки
+    private fun removeAround(i: Int, k: Int, fieldSizeI : Int, fieldSizeK : Int) { // перемещает бомбы вокруг клетки
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
         val isINotEight = (i != (fieldSizeI - 1))
@@ -158,54 +155,54 @@ class GameBoard : AppCompatActivity() {
         if (isINotZero) {
             arrayOfCells[i - 1][k]!!.isRelocated = true // помечаем места, чтобы не переставить сюда же
             if (arrayOfCells[i - 1][k]!!.isBomb == 1) {
-                relocateBomb(i - 1, k)
+                relocateBomb(i - 1, k, fieldSizeI, fieldSizeK)
             }
         }
         if (isKNotZero && isINotZero) {
             arrayOfCells[i - 1][k - 1]!!.isRelocated = true
             if (arrayOfCells[i - 1][k - 1]!!.isBomb == 1) {
-                relocateBomb(i - 1, k - 1)
+                relocateBomb(i - 1, k - 1, fieldSizeI, fieldSizeK)
             }
         }
         if (isINotEight) {
             arrayOfCells[i + 1][k]!!.isRelocated = true
             if (arrayOfCells[i + 1][k]!!.isBomb == 1) {
-                relocateBomb(i + 1, k)
+                relocateBomb(i + 1, k, fieldSizeI, fieldSizeK)
             }
         }
         if (isKNotEight && isINotEight) {
             arrayOfCells[i + 1][k + 1]!!.isRelocated = true
             if (arrayOfCells[i + 1][k + 1]!!.isBomb == 1) {
-                relocateBomb(i + 1, k + 1)
+                relocateBomb(i + 1, k + 1, fieldSizeI, fieldSizeK)
             }
         }
         if (isKNotZero) {
             arrayOfCells[i][k - 1]!!.isRelocated = true
             if (arrayOfCells[i][k - 1]!!.isBomb == 1) {
-                relocateBomb(i, k - 1)
+                relocateBomb(i, k - 1, fieldSizeI, fieldSizeK)
             }
         }
         if (isINotEight && isKNotZero) {
             arrayOfCells[i + 1][k - 1]!!.isRelocated = true
             if (arrayOfCells[i + 1][k - 1]!!.isBomb == 1) {
-                relocateBomb(i + 1, k - 1)
+                relocateBomb(i + 1, k - 1, fieldSizeI, fieldSizeK)
             }
         }
         if (isKNotEight) {
             arrayOfCells[i][k + 1]!!.isRelocated = true
             if (arrayOfCells[i][k + 1]!!.isBomb == 1) {
-                relocateBomb(i, k + 1)
+                relocateBomb(i, k + 1, fieldSizeI, fieldSizeK)
             }
         }
         if (isINotZero && isKNotEight) {
             arrayOfCells[i - 1][k + 1]!!.isRelocated = true
             if (arrayOfCells[i - 1][k + 1]!!.isBomb == 1) {
-                relocateBomb(i - 1, k + 1)
+                relocateBomb(i - 1, k + 1, fieldSizeI, fieldSizeK)
             }
         }
     }
 
-    private fun numbOfBombs(i: Int, k: Int) { // кол-во бомб на клетке
+    private fun numbOfBombs(i: Int, k: Int, fieldSizeI : Int, fieldSizeK : Int) { // кол-во бомб на клетке
         var count = 0
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
@@ -239,7 +236,7 @@ class GameBoard : AppCompatActivity() {
         arrayOfCells[i][k]!!.value = count
     }
 
-    private fun openFieldByClick(i: Int, k: Int) { // открытие пустых пространств на поле
+    private fun openFieldByClick(i: Int, k: Int, fieldSizeI : Int, fieldSizeK : Int) { // открытие пустых пространств на поле
         val isINotZero = (i != 0)
         val isKNotZero = (k != 0)
         val isINotEight = (i != (fieldSizeI - 1))
@@ -247,46 +244,46 @@ class GameBoard : AppCompatActivity() {
 
         if (isINotZero && !arrayOfCells[i - 1][k]!!.isOpened) {
             arrayOfCells[i - 1][k]!!.isOpened = true
-            click(i - 1, k)
+            click(i - 1, k, fieldSizeI, fieldSizeK)
         }
 
         if (isINotZero && isKNotZero && !arrayOfCells[i - 1][k - 1]!!.isOpened) {
             arrayOfCells[i - 1][k - 1]!!.isOpened = true
-            click(i - 1, k - 1)
+            click(i - 1, k - 1, fieldSizeI, fieldSizeK)
         }
 
         if (isINotEight && !arrayOfCells[i + 1][k]!!.isOpened) {
             arrayOfCells[i + 1][k]!!.isOpened = true
-            click(i + 1, k)
+            click(i + 1, k, fieldSizeI, fieldSizeK)
         }
 
         if (isINotEight && isKNotEight && !arrayOfCells[i + 1][k + 1]!!.isOpened) {
             arrayOfCells[i + 1][k + 1]!!.isOpened = true
-            click(i + 1, k + 1)
+            click(i + 1, k + 1, fieldSizeI, fieldSizeK)
         }
 
         if (isKNotZero && !arrayOfCells[i][k - 1]!!.isOpened) {
             arrayOfCells[i][k - 1]!!.isOpened = true
-            click(i, k - 1)
+            click(i, k - 1, fieldSizeI, fieldSizeK)
         }
 
         if (isKNotZero && isINotEight && !arrayOfCells[i + 1][k - 1]!!.isOpened) {
             arrayOfCells[i + 1][k - 1]!!.isOpened = true
-            click(i + 1, k - 1)
+            click(i + 1, k - 1, fieldSizeI, fieldSizeK)
         }
 
         if (isKNotEight && !arrayOfCells[i][k + 1]!!.isOpened) {
             arrayOfCells[i][k + 1]!!.isOpened = true
-            click(i, k + 1)
+            click(i, k + 1, fieldSizeI, fieldSizeK)
         }
 
         if (isKNotEight && isINotZero && !arrayOfCells[i - 1][k + 1]!!.isOpened) {
             arrayOfCells[i - 1][k + 1]!!.isOpened = true
-            click(i - 1, k + 1)
+            click(i - 1, k + 1, fieldSizeI, fieldSizeK)
         }
     }
 
-    private fun click(i: Int, k: Int) { // открывает клетку
+    private fun click(i: Int, k: Int, fieldSizeI : Int, fieldSizeK : Int) { // открывает клетку
         if (arrayOfCells[i][k]!!.isBomb == 0 && !arrayOfCells[i][k]!!.isChecked) {
             arrayOfCells[i][k]!!.isChecked = true
         }
@@ -303,15 +300,15 @@ class GameBoard : AppCompatActivity() {
                 arrayOfCells[i][k]!!.isOpened = true
             }
             arrayOfCells[i][k]!!.isClickable = false
-            isWon()
+            isWon(fieldSizeI, fieldSizeK)
 
         }
         if (arrayOfCells[i][k]!!.value == 0) { // если бомб нет открываем поле дальше
-            openFieldByClick(i, k)
+            openFieldByClick(i, k, fieldSizeI, fieldSizeK)
         }
     }
 
-    private fun gameOver() { // открывает все бомбы и заканчивает игру
+    private fun gameOver(fieldSizeI : Int, fieldSizeK : Int) { // открывает все бомбы и заканчивает игру
         chronometer.stop()
         Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
         for (a in 0 until fieldSizeI) {
@@ -325,7 +322,7 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    private fun clickActivity(i: Int, k: Int, switcher: ToggleButton) {
+    private fun clickActivity(i: Int, k: Int, switcher: ToggleButton, fieldSizeI : Int, fieldSizeK : Int) {
         fieldArray[i][k]!!.setOnClickListener {
             if (switcher.isChecked) { // режим флага
                 if (!arrayOfCells[i][k]!!.isFlag && arrayOfCells[i][k]!!.isClickable) {
@@ -346,21 +343,21 @@ class GameBoard : AppCompatActivity() {
                     arrayOfCells[i][k]!!.isRelocated = true
                     if (arrayOfCells[i][k]!!.isBomb == 1) { // если тут бомба переставляем ее
                         arrayOfCells[i][k]!!.isBomb = 0
-                        relocateBomb(i, k)
+                        relocateBomb(i, k, fieldSizeI, fieldSizeK)
                     }
 
                     for (a in 0 until fieldSizeI) { // пересчитываем количество бомб
                         for (b in 0 until fieldSizeK) {
-                            numbOfBombs(a, b)
+                            numbOfBombs(a, b, fieldSizeI, fieldSizeK)
                         }
                     }
 
                     if (arrayOfCells[i][k]!!.value != 0 && arrayOfCells[i][k]!!.isBomb == 0) { // убираем бомбы вокруг если они есть
-                        removeAround(i, k)
+                        removeAround(i, k, fieldSizeI, fieldSizeK)
                     }
                     for (a in 0 until fieldSizeI) { // пересчитываем количество бомб
                         for (b in 0 until fieldSizeK) {
-                            numbOfBombs(a, b)
+                            numbOfBombs(a, b, fieldSizeI, fieldSizeK)
                         }
                     }
                     val bombs = arrayOfCells[i][k]!!.value
@@ -376,7 +373,7 @@ class GameBoard : AppCompatActivity() {
                             arrayOfCells[i][k]!!.isOpened = true
                         }
                         arrayOfCells[i][k]!!.isClickable = false
-                        isWon()
+                        isWon(fieldSizeI, fieldSizeK)
                     }
                     isFirstClick = false
 
@@ -396,16 +393,16 @@ class GameBoard : AppCompatActivity() {
                         arrayOfCells[i][k]!!.isOpened = true
                     }
                     arrayOfCells[i][k]!!.isClickable = false
-                    isWon()
+                    isWon(fieldSizeI, fieldSizeK)
                     if (arrayOfCells[i][k]!!.value == 0) { // если клетка пустая открываем поле вокруг
-                        openFieldByClick(i, k)
+                        openFieldByClick(i, k, fieldSizeI, fieldSizeK)
                     }
                 }
                 if (arrayOfCells[i][k]!!.value == 0 && arrayOfCells[i][k]!!.isBomb == 0) {
-                    openFieldByClick(i, k) // открываем поле без бомб
+                    openFieldByClick(i, k, fieldSizeI, fieldSizeK) // открываем поле без бомб
                 }
                 if (arrayOfCells[i][k]!!.isBomb == 1) { // если нажали на бомбу игра закончена
-                    gameOver()
+                    gameOver(fieldSizeI, fieldSizeK)
                 }
             }
         }
@@ -415,7 +412,9 @@ class GameBoard : AppCompatActivity() {
         field: LinearLayout,
         switcher: ToggleButton,
         size: LinearLayout.LayoutParams,
-        row: LinearLayout.LayoutParams
+        row: LinearLayout.LayoutParams,
+        fieldSizeI : Int,
+        fieldSizeK : Int
     ) {
         for (i in 0 until fieldSizeI) {
             val linRow = LinearLayout(this)
@@ -423,15 +422,15 @@ class GameBoard : AppCompatActivity() {
                 fieldArray[i][k] = ImageView(this)
                 fieldArray[i][k]!!.background = cell[4] // задаем изначальный вид поля
                 arrayOfCells[i][k]!!.isOpened = false
-                numbOfBombs(i, k)
-                if (arrayOfCells[i][k]!!.isEmpty == 1) clickActivity(i, k, switcher)
+                numbOfBombs(i, k, fieldSizeI, fieldSizeK)
+                if (arrayOfCells[i][k]!!.isEmpty == 1) clickActivity(i, k, switcher, fieldSizeI, fieldSizeK)
                 linRow.addView(fieldArray[i][k], size)
             }
             field.addView(linRow, row)
         }
     }
 
-    private fun fieldDesign() {
+    private fun fieldDesign(fieldSizeI : Int, fieldSizeK : Int) {
         newGame()
         val cellSize = searchScreen() / fieldSizeI
         val row: LinearLayout.LayoutParams =
@@ -454,7 +453,7 @@ class GameBoard : AppCompatActivity() {
                 j ++
             }
         }
-        forFun(field, switcher, size, row)
+        forFun(field, switcher, size, row, fieldSizeI, fieldSizeK)
     }
 
 

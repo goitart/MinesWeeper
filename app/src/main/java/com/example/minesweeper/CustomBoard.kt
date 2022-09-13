@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.NumberPicker
+import android.widget.Toast
 
 class CustomBoard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +29,11 @@ class CustomBoard : AppCompatActivity() {
     fun toGameBoard(view: View) {
         val intent = Intent(this, GameBoard :: class.java)
         val arr = findMaxBombs()
-        finishAndRemoveTask()
         intent.putExtra("gameMode", "Custom")
         intent.putExtra("fieldSizeI", arr[0])
         intent.putExtra("fieldSizeK", arr[1])
         intent.putExtra("numbOfBombs", arr[2])
+        finishAndRemoveTask()
         startActivity(intent)
     }
 
@@ -40,12 +41,12 @@ class CustomBoard : AppCompatActivity() {
         val pickerI = findViewById<com.shawnlin.numberpicker.NumberPicker>(R.id.row)
         val pickerK = findViewById<com.shawnlin.numberpicker.NumberPicker>(R.id.column)
         val pickerBombs = findViewById<com.shawnlin.numberpicker.NumberPicker>(R.id.numbOfBombs)
-        var boardSize = 0
-        var iSize = 5
-        var kSize = 5
-        pickerBombs.maxValue = 10
+        var boardSize: Int
+        var iSize = 7
+        var kSize = 7
         pickerI.setOnValueChangedListener {_, _, newVal ->
             iSize = newVal
+            Toast.makeText(this, "$iSize", Toast.LENGTH_SHORT).show()
             boardSize = iSize * kSize
             pickerBombs.maxValue = boardSize / 3
         }

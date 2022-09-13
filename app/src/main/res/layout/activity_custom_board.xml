@@ -51,8 +51,8 @@
                 android:id="@+id/row"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
                 app:np_dividerColor="@color/inv"
                 app:np_max="100"
                 app:np_min="7"
@@ -108,7 +108,8 @@
             android:layout_weight="1"
             app:np_dividerColor="@color/inv"
             app:np_itemSpacing="40dp"
-            app:np_min="2"
+            app:np_max="16"
+            app:np_min="1"
             app:np_orientation="horizontal"
             app:np_selectedTextColor="?colorAccent"
             app:np_selectedTextSize="50sp"
@@ -116,6 +117,7 @@
             app:np_textSize="30sp" />
 
         <Button
+            android:id="@+id/PlayButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
