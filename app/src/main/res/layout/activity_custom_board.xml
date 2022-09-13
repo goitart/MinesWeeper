@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"
-        android:background="@color/inv"
+        android:background ="@color/inv"
         android:onClick="toNewGameSettings"
         android:padding="10dp"
         app:srcCompat="@drawable/arrow_back"

@@ -19,7 +19,12 @@ class GameBoard : AppCompatActivity() {
     private var numbOfOpened = 0
     private var isFirstClick = true
     private var gameMode = ""
+<<<<<<< Updated upstream
     private lateinit var chronometer: Chronometer
+=======
+
+    private lateinit var chronometer : Chronometer
+>>>>>>> Stashed changes
     private var isStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

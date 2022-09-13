@@ -10,7 +10,7 @@ import android.widget.NumberPicker
 import android.widget.Toast
 
 class CustomBoard : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_board)
         val window = this.window

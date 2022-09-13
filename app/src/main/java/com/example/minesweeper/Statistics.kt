@@ -22,7 +22,7 @@ class Statistics : AppCompatActivity() {
             reset()
         }
     }
-    fun toMainActivity(view: View) {
+    fun toMainActivity(view : View) {
         val intent = Intent(this, MainActivity :: class.java)
         finishAndRemoveTask()
         startActivity(intent)
