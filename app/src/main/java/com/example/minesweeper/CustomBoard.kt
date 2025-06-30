@@ -1,9 +1,12 @@
 package com.example.minesweeper
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
 import android.widget.NumberPicker
@@ -45,15 +48,44 @@ class CustomBoard : AppCompatActivity() {
         var iSize = 7
         var kSize = 7
         pickerI.setOnValueChangedListener {_, _, newVal ->
+
+            val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            val milliseconds = 1L
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    milliseconds,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
+
             iSize = newVal
-            Toast.makeText(this, "$iSize", Toast.LENGTH_SHORT).show()
             boardSize = iSize * kSize
             pickerBombs.maxValue = boardSize / 3
         }
         pickerK.setOnValueChangedListener {_, _, newVal ->
+
+            val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            val milliseconds = 1L
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    milliseconds,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
+
             kSize = newVal
             boardSize = iSize * kSize
             pickerBombs.maxValue = boardSize / 3
+        }
+        pickerBombs.setOnValueChangedListener{_, _, newVal ->
+            val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            val milliseconds = 1L
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    milliseconds,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
         }
         return arrayOf(pickerI.value, pickerK.value, pickerBombs.value)
     }

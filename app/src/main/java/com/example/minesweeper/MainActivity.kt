@@ -1,8 +1,11 @@
 package com.example.minesweeper
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
 import com.google.android.material.color.DynamicColors
@@ -27,5 +30,15 @@ class MainActivity : AppCompatActivity() {
     fun toStatistics(view: View) {
         val intent = Intent(this, Statistics :: class.java)
         startActivity(intent)
+    }
+    fun vibro(view: View) {
+        val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val milliseconds = 10L
+        vibrator.vibrate(
+            VibrationEffect.createOneShot(
+                milliseconds,
+                VibrationEffect.DEFAULT_AMPLITUDE
+            )
+        )
     }
 }

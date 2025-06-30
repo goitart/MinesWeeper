@@ -1,10 +1,13 @@
 package com.example.minesweeper
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.os.SystemClock
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
@@ -19,12 +22,7 @@ class GameBoard : AppCompatActivity() {
     private var numbOfOpened = 0
     private var isFirstClick = true
     private var gameMode = ""
-<<<<<<< Updated upstream
     private lateinit var chronometer: Chronometer
-=======
-
-    private lateinit var chronometer : Chronometer
->>>>>>> Stashed changes
     private var isStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,7 +145,7 @@ class GameBoard : AppCompatActivity() {
                     arrayOfCells[a][b]!!.isClickable = false
                 }
             }
-            Toast.makeText(this, "You won", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "😎", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -315,7 +313,15 @@ class GameBoard : AppCompatActivity() {
 
     private fun gameOver(fieldSizeI : Int, fieldSizeK : Int) { // открывает все бомбы и заканчивает игру
         chronometer.stop()
-        Toast.makeText(this, "GAME OVER", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "LOSER", Toast.LENGTH_SHORT).show()
+        val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val milliseconds = 10L
+        vibrator.vibrate(
+            VibrationEffect.createOneShot(
+                milliseconds,
+                VibrationEffect.DEFAULT_AMPLITUDE
+            )
+        )
         for (a in 0 until fieldSizeI) {
             for (b in 0 until fieldSizeK) {
                 arrayOfCells[a][b]!!.isClickable = false
